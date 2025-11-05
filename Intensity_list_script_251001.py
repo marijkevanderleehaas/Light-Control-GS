@@ -33,13 +33,12 @@ def intensity_allocation_treat4(ID):
 
     return pd.DataFrame(lines, columns=["id", "intensity", "start", "end", "index"])
 
-def process_documents_stable(doc1, doc2, output_dir = "251024_int_pttrns_jun_rnd1"):
+def process_documents_stable(output_dir = "251105_int_pttrns_rnd2"):
     os.makedirs(output_dir, exist_ok = True)
 
-    df1 = pd.read_csv(doc1)
     nrows = 4
 
-    file_name_list = ["251002", "251003", "251004", "251005"]
+    file_name_list = ["251106", "251107", "251108", "251109"]
     print(file_name_list)
 
     for i in range(nrows):
@@ -91,39 +90,43 @@ def process_documents_stable(doc1, doc2, output_dir = "251024_int_pttrns_jun_rnd
         combined.to_csv(os.path.join(output_dir, filename), index = False)
 
 
-process_documents_stable("250931_June_25_light_50_430.csv", "250931_June_25_light_0_430.csv")
+process_documents_stable()
 
 
-def process_documents(doc1, doc2, doc3, output_dir="251024_int_pttrns_jun_rnd1"):
+def process_documents(doc1, doc2, doc3, output_dir="251105_int_pttrns_rnd2"):
     os.makedirs(output_dir, exist_ok=True)
 
     df1 = pd.read_csv(doc3)
     nrows = len(df1)
 
-    file_name_list = ["251006", "251007", "251008", "251009", "251010", "251011", "251012",
-                      "251013", "251014", "251015", "251016", "251017", "251018", "251019",
-                      "251020", "251021", "251022", "251023", "251024", "251025", "251026",
-                      "251027", "251028", "251029", "251030", "251031", "251101", "251102",
-                      "251103", "251104"]
+    file_name_list = ["251110", "251111", "251112", "251113", "251114", "251115", "251116",
+                      "251117", "251118", "251119", "251120", "251121", "251122", "251123",
+                      "251124", "251125", "251126", "251127", "251128", "251129", "251130",
+                      "251201", "251202", "251203", "251204", "251205", "251206", "251207",
+                      "251208", "251209"]
 
     for i in range(nrows):
         #treatment 1 control
-        C1_1 = pd.DataFrame([["ao_DALI1LED1DimVal", 180, "00:00", "23:59", 0]],
-                            columns=["id", "intensity", "start", "end", "index"])
-        C3_3 = pd.DataFrame([["ao_DALI3LED41DimVal", 180, "00:00", "23:59", 0]],
-                            columns=["id", "intensity", "start", "end", "index"])
+        #rnd 2 treatment 3 jun 0-430
+        C1_1 = intensity_allocation("ao_DALI1LED1DimVal", doc2, i)
+        C3_3 = intensity_allocation("ao_DALI3LED41DimVal", doc2, i)
 
         #treatment 2 jun 50-430
-        C1_2 = intensity_allocation("ao_DALI1LED21DimVal", doc1, i)
-        C3_2 = intensity_allocation("ao_DALI3LED21DimVal", doc1, i)
+        #rnd2 treatment 4 sep 50-430
+        C1_2 = intensity_allocation("ao_DALI1LED21DimVal", doc3, i)
+        C3_2 = intensity_allocation("ao_DALI3LED21DimVal", doc3, i)
 
         # treatment 3 jun 0-430
-        C2_2 = intensity_allocation("ao_DALI2LED21DimVal", doc2, i)
-        C3_1 = intensity_allocation("ao_DALI3LED1DimVal", doc2, i)
+        #rnd treatment 1 control
+        C2_2 = pd.DataFrame([["ao_DALI2LED21DimVal", 180, "00:00", "23:59", 0]],
+                            columns=["id", "intensity", "start", "end", "index"])
+        C3_1 = pd.DataFrame([["ao_DALI3LED1DimVal", 180, "00:00", "23:59", 0]],
+                            columns=["id", "intensity", "start", "end", "index"])
 
         #treatment 4 sep 50-430
-        C2_1 = intensity_allocation("ao_DALI2LED1DimVal", doc3, i)
-        C2_3 = intensity_allocation("ao_DALI2LED41DimVal", doc3, i)
+        #rnd2 treatment 2 jun 50-430
+        C2_1 = intensity_allocation("ao_DALI2LED1DimVal", doc1, i)
+        C2_3 = intensity_allocation("ao_DALI2LED41DimVal", doc1, i)
 
         # used for WP2
         C1_3 = pd.DataFrame([["ao_DALI1LED41DimVal", 180, "00:00", "23:59", 0]],
@@ -158,8 +161,11 @@ def process_documents(doc1, doc2, doc3, output_dir="251024_int_pttrns_jun_rnd1")
 
         combined.to_csv(os.path.join(output_dir, filename), index=False)
 
+Jun25_50_430 = "251105 Intensity patterns\\251002_June_25_light_50_430.csv"
+Jun25_0_430 = "251105 Intensity patterns\\251002_June_25_light_0_430.csv"
+Sep25_50_430 = "251105 Intensity patterns\\251002_Sep_25_light_50_430.csv"
 
-process_documents("251002_June_25_light_50_430.csv", "251002_June_25_light_0_430.csv", "251002_Sep_25_light_50_430.csv")
+process_documents(Jun25_50_430, Jun25_0_430, Sep25_50_430)
 
 
 
